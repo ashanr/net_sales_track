@@ -49,9 +49,9 @@ dotnet run
 ```
 
 The API will be available at:
-- HTTP: http://localhost:5000
-- HTTPS: https://localhost:5001
-- Swagger UI: https://localhost:5001/swagger
+- HTTP: http://localhost:5158
+- HTTPS: https://localhost:7144
+- Swagger UI: https://localhost:7144/swagger
 
 ### Running Tests
 ```bash
