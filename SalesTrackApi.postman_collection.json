@@ -1,0 +1,319 @@
+{
+  "info": {
+    "name": "SalesTrackApi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Sales",
+      "item": [
+        {
+          "name": "Get All Sales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sales",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales"]
+            }
+          }
+        },
+        {
+          "name": "Get Sale by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/{{saleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales", "{{saleId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Sales by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/daterange?startDate={{startDate}}&endDate={{endDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales", "daterange"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "{{startDate}}"
+                },
+                {
+                  "key": "endDate",
+                  "value": "{{endDate}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sales by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/category/{{category}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales", "category", "{{category}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Sales by Region",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/region/{{region}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales", "region", "{{region}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Sale",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productName\": \"Sample Product\",\n  \"category\": \"Electronics\",\n  \"amount\": 99.99,\n  \"quantity\": 1,\n  \"saleDate\": \"2023-11-29T00:00:00Z\",\n  \"region\": \"North\",\n  \"salesRepresentative\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sales",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales"]
+            }
+          }
+        },
+        {
+          "name": "Update Sale",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{saleId}},\n  \"productName\": \"Updated Product\",\n  \"category\": \"Electronics\",\n  \"amount\": 149.99,\n  \"quantity\": 2,\n  \"saleDate\": \"2023-11-29T00:00:00Z\",\n  \"region\": \"North\",\n  \"salesRepresentative\": \"Jane Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/{{saleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales", "{{saleId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Sale",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/{{saleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sales", "{{saleId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Get Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics?startDate={{startDate}}&endDate={{endDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "{{startDate}}"
+                },
+                {
+                  "key": "endDate",
+                  "value": "{{endDate}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Today Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/today",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "today"]
+            }
+          }
+        },
+        {
+          "name": "Get Week Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/week",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "week"]
+            }
+          }
+        },
+        {
+          "name": "Get Month Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/month",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "month"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Visualization",
+      "item": [
+        {
+          "name": "Get Chart Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/visualization/charts?startDate={{startDate}}&endDate={{endDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "visualization", "charts"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "{{startDate}}"
+                },
+                {
+                  "key": "endDate",
+                  "value": "{{endDate}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sales by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/visualization/by-category?startDate={{startDate}}&endDate={{endDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "visualization", "by-category"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "{{startDate}}"
+                },
+                {
+                  "key": "endDate",
+                  "value": "{{endDate}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sales by Region",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/visualization/by-region?startDate={{startDate}}&endDate={{endDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "visualization", "by-region"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "{{startDate}}"
+                },
+                {
+                  "key": "endDate",
+                  "value": "{{endDate}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Time Series Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/visualization/time-series?startDate={{startDate}}&endDate={{endDate}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "visualization", "time-series"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "{{startDate}}"
+                },
+                {
+                  "key": "endDate",
+                  "value": "{{endDate}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5158"
+    },
+    {
+      "key": "saleId",
+      "value": "1"
+    },
+    {
+      "key": "category",
+      "value": "Electronics"
+    },
+    {
+      "key": "region",
+      "value": "North"
+    },
+    {
+      "key": "startDate",
+      "value": "2023-01-01T00:00:00Z"
+    },
+    {
+      "key": "endDate",
+      "value": "2023-12-31T23:59:59Z"
+    }
+  ]
+}

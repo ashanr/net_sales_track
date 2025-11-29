@@ -6,9 +6,20 @@ public static class DataSeeder
 {
     public static void SeedData(SalesDbContext context)
     {
-        if (context.Sales.Any())
+        try
         {
-            return;
+            // Check if data already exists by trying to count
+            var existingCount = context.Sales.Count();
+            if (existingCount > 0)
+            {
+                Console.WriteLine($"Database already contains {existingCount} sales records. Skipping seeding.");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error checking existing data: {ex.Message}. This might be expected if tables don't exist yet.");
+            // Continue with seeding - tables should exist after migration
         }
 
         var categories = new[] { "Electronics", "Clothing", "Food", "Home & Garden", "Sports" };

@@ -17,9 +17,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Add Entity Framework with In-Memory database
+// Add Entity Framework with PostgreSQL database
 builder.Services.AddDbContext<SalesDbContext>(options =>
-    options.UseInMemoryDatabase("SalesTrackDb"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SalesTrackDb")));
 
 // Add services
 builder.Services.AddScoped<ISalesService, SalesService>();
@@ -44,7 +44,29 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<SalesDbContext>();
-    DataSeeder.SeedData(context);
+    try
+    {
+        Console.WriteLine("Running database migrations...");
+        context.Database.Migrate();
+        Console.WriteLine("Migrations completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Migration failed: {ex.Message}");
+        throw;
+    }
+
+    try
+    {
+        Console.WriteLine("Seeding data...");
+        DataSeeder.SeedData(context);
+        Console.WriteLine("Data seeding completed.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Data seeding failed: {ex.Message}");
+        throw;
+    }
 }
 
 // Configure the HTTP request pipeline.
