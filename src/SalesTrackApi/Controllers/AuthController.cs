@@ -5,6 +5,7 @@ using SalesTrackApi.Models;
 using SalesTrackApi.Models.DTOs;
 using SalesTrackApi.Services;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SalesTrackApi.Controllers;
 
@@ -19,6 +20,22 @@ public class AuthController : ControllerBase
     {
         _context = context;
         _tokenService = tokenService;
+    }
+
+    [HttpGet("users")]
+    [Authorize]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await _context.Users
+            .Select(u => new UserDto
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Email = u.Email
+            })
+            .ToListAsync();
+
+        return Ok(users);
     }
 
     [HttpPost("register")]
@@ -77,8 +94,12 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid email or password" });
         }
 
-        // Generate token
-        var token = _tokenService.GenerateToken(user.Id, user.Email, user.Name);
+        // Increment token version to invalidate previous tokens
+        user.TokenVersion++;
+        await _context.SaveChangesAsync();
+
+        // Generate token with new version
+        var token = _tokenService.GenerateToken(user.Id, user.Email, user.Name, user.TokenVersion);
 
         // Return response
         var response = new AuthResponse

@@ -1,5 +1,6 @@
 using SalesTrackApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace SalesTrackApi.Data;
 
@@ -79,6 +80,34 @@ public static class DataSeeder
             // Try to access Users table to see if it exists
             var userCount = context.Users.Count();
             Console.WriteLine($"Users table already exists with {userCount} users.");
+
+            // Check if TokenVersion column exists, if not add it
+            try
+            {
+                var testUser = context.Users.FirstOrDefault();
+                if (testUser != null)
+                {
+                    var version = testUser.TokenVersion; // This will throw if column doesn't exist
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("TokenVersion column doesn't exist, adding it...");
+                context.Database.ExecuteSqlRaw(@"ALTER TABLE ""Users"" ADD COLUMN ""TokenVersion"" INTEGER NOT NULL DEFAULT 1;");
+                Console.WriteLine("TokenVersion column added successfully.");
+            }
+
+            // Ensure existing users have TokenVersion set
+            var usersWithoutVersion = context.Users.Where(u => u.TokenVersion == 0).ToList();
+            if (usersWithoutVersion.Any())
+            {
+                foreach (var user in usersWithoutVersion)
+                {
+                    user.TokenVersion = 1;
+                }
+                context.SaveChanges();
+                Console.WriteLine($"Updated {usersWithoutVersion.Count} existing users with TokenVersion.");
+            }
         }
         catch (Exception ex)
         {
@@ -91,7 +120,8 @@ public static class DataSeeder
                     ""Name"" VARCHAR(200) NOT NULL,
                     ""Email"" VARCHAR(255) NOT NULL UNIQUE,
                     ""PasswordHash"" TEXT NOT NULL,
-                    ""CreatedAt"" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+                    ""CreatedAt"" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+                    ""TokenVersion"" INTEGER NOT NULL DEFAULT 1
                 );
             ");
 

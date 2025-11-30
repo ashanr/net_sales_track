@@ -7,7 +7,7 @@ namespace SalesTrackApi.Services;
 
 public interface ITokenService
 {
-    string GenerateToken(int userId, string email, string name);
+    string GenerateToken(int userId, string email, string name, int tokenVersion);
 }
 
 public class TokenService : ITokenService
@@ -19,7 +19,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(int userId, string email, string name)
+    public string GenerateToken(int userId, string email, string name, int tokenVersion)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured")));
@@ -31,6 +31,7 @@ public class TokenService : ITokenService
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             new Claim(ClaimTypes.Email, email),
             new Claim(ClaimTypes.Name, name),
+            new Claim("TokenVersion", tokenVersion.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

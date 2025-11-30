@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,29 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+
+    // Add custom token validation for token versioning
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async context =>
+        {
+            var userIdClaim = context.Principal?.FindFirst(ClaimTypes.NameIdentifier);
+            var tokenVersionClaim = context.Principal?.FindFirst("TokenVersion");
+
+            if (userIdClaim != null && tokenVersionClaim != null)
+            {
+                var dbContext = context.HttpContext.RequestServices.GetRequiredService<SalesDbContext>();
+                var userId = int.Parse(userIdClaim.Value);
+                var tokenVersion = int.Parse(tokenVersionClaim.Value);
+
+                var user = await dbContext.Users.FindAsync(userId);
+                if (user == null || user.TokenVersion != tokenVersion)
+                {
+                    context.Fail("Token has been invalidated");
+                }
+            }
+        }
     };
 });
 

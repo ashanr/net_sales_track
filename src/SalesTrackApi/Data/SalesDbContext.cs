@@ -33,6 +33,7 @@ public class SalesDbContext : DbContext
             entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.TokenVersion).HasDefaultValue(1);
         });
     }
 }
