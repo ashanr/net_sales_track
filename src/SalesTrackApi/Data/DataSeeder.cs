@@ -1,4 +1,5 @@
 using SalesTrackApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesTrackApi.Data;
 
@@ -8,6 +9,9 @@ public static class DataSeeder
     {
         try
         {
+            // Ensure Users table exists
+            EnsureUsersTableExists(context);
+
             // Check if data already exists by trying to count
             var existingCount = context.Sales.Count();
             if (existingCount > 0)
@@ -66,5 +70,32 @@ public static class DataSeeder
 
         context.Sales.AddRange(sales);
         context.SaveChanges();
+    }
+
+    private static void EnsureUsersTableExists(SalesDbContext context)
+    {
+        try
+        {
+            // Try to access Users table to see if it exists
+            var userCount = context.Users.Count();
+            Console.WriteLine($"Users table already exists with {userCount} users.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Users table doesn't exist, creating it: {ex.Message}");
+
+            // Create the Users table manually using raw SQL
+            context.Database.ExecuteSqlRaw(@"
+                CREATE TABLE IF NOT EXISTS ""Users"" (
+                    ""Id"" SERIAL PRIMARY KEY,
+                    ""Name"" VARCHAR(200) NOT NULL,
+                    ""Email"" VARCHAR(255) NOT NULL UNIQUE,
+                    ""PasswordHash"" TEXT NOT NULL,
+                    ""CreatedAt"" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+                );
+            ");
+
+            Console.WriteLine("Users table created successfully.");
+        }
     }
 }
